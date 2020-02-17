@@ -13,7 +13,7 @@ public final class SimulationDataObject {
 
         HashMap map11 = new HashMap<Integer, Double>();
         map11.put(16, 1.90);
-        map11.put(17, 2.90);
+        map11.put(17, 1.70);
         map11.put(18, 0.90);
 
         HashMap map16 = new HashMap<Integer, Double>();

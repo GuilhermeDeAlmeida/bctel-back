@@ -10,27 +10,37 @@ import java.util.HashMap;
 public class SimulationServiceImpl implements SimulationService {
     @Override
     public Simulation obtainCallPrice(Simulation simulation) {
-        simulation.setWithPlan(this.calculateWithPlan(simulation, true));
-        simulation.setWithoutPlan(this.calculateWithPlan(simulation, false));
+        simulation.setWithPlan(this.calculateWithPlan(simulation));
+        simulation.setWithoutPlan(this.calculateWithOutPlan(simulation));
         return simulation;
     }
 
-    private Double calculateWithPlan(Simulation simulation, Boolean withPlan) {
+    private Double calculateWithPlan(Simulation simulation) {
 
         Integer plan = simulation.getPlan();
-        Integer time = simulation.getTime();
+        Integer time = simulation.getTime() != null? simulation.getTime(): 1;
         Integer timeCalculation = time - plan;
         Double price = 0.0;
 
-        //Caso
+        //verificar se o tempo de ligação é foi maior que o plano
+        //se sim, calcular taxa e incluir 10%
         if (timeCalculation > 0) {
             Double tax = calculateTax(simulation);
-            //multiplicar tempo por taxa
-            price = time * tax;
-            if (withPlan) price = price * 0.1;
+            //valor somente do que ultrapassou
+            price = timeCalculation * tax;
+            price += price * 0.1;
         }
         return price;
     }
+
+    private Double calculateWithOutPlan(Simulation simulation){
+        Integer time = simulation.getTime() != null? simulation.getTime(): 1;
+
+        Double tax = calculateTax(simulation);
+        Double price = time * tax;
+        return price;
+    }
+
 
     private Double calculateTax(Simulation simulation) {
 
